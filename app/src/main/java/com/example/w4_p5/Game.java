@@ -11,7 +11,7 @@ import java.lang.reflect.Array;
 import java.util.Hashtable;
 import java.util.*;
 
-public class Game {
+public class Game implements Parcelable {
 
     private Player player;
     private Words words;
@@ -107,4 +107,32 @@ public class Game {
         return player.getTurnRemain();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeValue(player);
+        parcel.writeValue(words);
+        parcel.writeString(answer);
+        parcel.writeString(currentWord);
+    }
+
+    public static final Parcelable.Creator<Game> CREATOR = new Parcelable.Creator<Game>() {
+        public Game createFromParcel (Parcel in) {
+            Game game = new Game();
+            game.player = (Player) in.readValue(Player.class.getClassLoader());
+            game.words = (Words) in.readValue(Words.class.getClassLoader());
+            game.answer = in.readString();
+            game.currentWord = in.readString();
+            return game;
+        }
+
+        @Override
+        public Game[] newArray(int i) {
+            return new Game[i];
+        }
+    };
 }
