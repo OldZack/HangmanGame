@@ -63,14 +63,14 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
                     btn.setText(letter);
                     btn.setTag(letter);
                     btn.setTextSize(10);
-                    btn.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL));
+                    btn.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER_VERTICAL));
                     buttons[button + row*6] = btn;
                     currRow.addView(btn);
                     btn.setOnClickListener(this);
                 }
+                currRow.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 tlLetters.addView(currRow);
             }
-            TableRow currRow = new TableRow(GamePage.this);
         }
         else{
             btnHint = (Button) findViewById(R.id.btnHint);
