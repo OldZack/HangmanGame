@@ -40,7 +40,8 @@
         android:text="TextView"
         android:textSize="48sp"
         app:layout_constraintBottom_toTopOf="@+id/tvNoti"
-        app:layout_constraintEnd_toEndOf="@+id/tvNoti"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivMan" />
 
     <TableLayout

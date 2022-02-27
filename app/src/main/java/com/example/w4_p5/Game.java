@@ -34,7 +34,7 @@ public class Game implements Parcelable {
         for (int i = 0; i < answer.length(); i++){
             if (answer.charAt(i) == n && currentWord.charAt(i*2) == '_') {
                 currentWord = currentWord.substring(0, i*2) + n + currentWord.substring(i*2 + 1);
-                if (answer.equals(currentWord.replace(" ", ""))){
+                if (checkWin()){
                     return 1;
                 }
                 else{
@@ -51,41 +51,40 @@ public class Game implements Parcelable {
         }
     }
 
+    public boolean checkWin(){
+        return answer.equals(currentWord.replace(" ", ""));
+    }
+
     // click hint
-    public void hintClick () {
-        if (player.getCount() == 0 && player.getTurnRemain() > 0) {
-            player.setCount(player.getCount()+1);
-            player.setTurnRemain(player.getTurnRemain()-1);
-            hintClickFirstTime(answer);
-        }
-        if (player.getCount() == 1 && player.getTurnRemain() > 0) {
-            player.setCount(player.getCount()+1);
-            player.setTurnRemain(player.getTurnRemain()-1);
-            hintClickSecondTime();
-        }
-        if (player.getCount() == 2 && player.getTurnRemain() > 0) {
-            player.setCount(player.getCount()+1);
-            player.setTurnRemain(player.getTurnRemain()-1);
-            hintClickThirdTime();
-        }
+    public int hintClick () {
+        player.setCount(player.getCount()+1);
+        return player.getCount();
     }
     // Click hint for the first time, and return the label of the word
-    public String hintClickFirstTime (String str) {
+    public String showHint () {
         return words.getHint(answer);
     }
     // click hint for the second time
-    public void hintClickSecondTime() {};
-
-    // click hint for the third times, return all the vowels.
-    public int[] hintClickThirdTime() {
-        int[] index = new int[0];
-        for (int i = 0;i<answer.length();i++) {
-            if (answer.charAt(i) == 'A' || answer.charAt(i) == 'E' || answer.charAt(i) == 'I' || answer.charAt(i) == 'O' || answer.charAt(i) == 'U') {
-                index = Arrays.copyOf(index,index.length+1);
-                index[index.length-1] = i;
+    public ArrayList<Character> DisableLetter() {
+        player.setTurnRemain(player.getTurnRemain()-1);
+        ArrayList<Character> chars = new ArrayList<Character>();
+        String givenAnswer = currentWord.replace(" ", "");
+        for (int i = 0; i < answer.length(); i++){
+            if (givenAnswer.charAt(i) == '_'){
+                chars.add(answer.charAt(i));
             }
         }
-        return index;
+        return chars;
+    };
+
+    // click hint for the third times, return all the vowels.
+    public void showVowel() {
+        player.setTurnRemain(player.getTurnRemain()-1);
+        for (int i = 0;i<answer.length();i++) {
+            if (answer.charAt(i) == 'A' || answer.charAt(i) == 'E' || answer.charAt(i) == 'I' || answer.charAt(i) == 'O' || answer.charAt(i) == 'U') {
+                currentWord = currentWord.substring(0, i*2) + answer.charAt(i) + currentWord.substring(i*2 + 1);
+            }
+        }
     }
     //
 
@@ -94,10 +93,6 @@ public class Game implements Parcelable {
         return answer.indexOf(ch,n);
     }
 
-    // restart the game
-    public void reStart() {
-
-    }
 
     public String getCurrentWord(){
        return currentWord;

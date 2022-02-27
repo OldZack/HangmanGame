@@ -18,7 +18,7 @@ public class Words implements Parcelable {
         words.put("BANANA","FOOD");
         words.put("CAT","ANIMAL");
         words.put("DOG","ANIMAL");
-        words.put("ELEPHANT","ANIMAL");
+        words.put("TIGER","ANIMAL");
         words.put("FOX","ANIMAL");
         words.put("GRAPE","FOOD");
         keys = new String[]{"APPLE","BANANA","CAT","DOG","ELEPHANT","FOX","GRAPE"};

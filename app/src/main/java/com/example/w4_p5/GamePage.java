@@ -14,13 +14,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 public class GamePage extends AppCompatActivity implements View.OnClickListener{
 
     private TableLayout tlLetters;
     private TextView tvAnswer;
     private ImageView ivMan;
+    Button[] buttons;
 
     private int gameState;
+    private int hintCount;
     Game game = new Game();
 
     @Override
@@ -32,17 +36,22 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
         tvAnswer.setText(game.getCurrentWord());
         ivMan = (ImageView) findViewById(R.id.ivMan);
         tlLetters = (TableLayout) findViewById(R.id.tlLetter);
+        buttons = new Button[26];
 
         int orientation = this.getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             for (int row = 0; row < 5; row++) {
                 TableRow currRow = new TableRow(GamePage.this);
                 for (int button = 0; button < 6; button++) {
+                    if (row == 4 && button == 2){
+                        break;
+                    }
                     String letter = Character.toString((char) (button + row * 6 + 65));
                     Button btn = new Button(GamePage.this);
                     btn.setText(letter);
                     btn.setTag(letter);
                     btn.setLayoutParams(new TableRow.LayoutParams(180, 95));
+                    buttons[button + row*6] = btn;
                     currRow.addView(btn);
                     btn.setOnClickListener(this);
                 }
@@ -51,15 +60,64 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
             TableRow currRow = new TableRow(GamePage.this);
         }
         else{
+            Button btnHint = (Button) findViewById(R.id.btnHint);
+            TextView tvHint = (TextView) findViewById(R.id.tvHint);
+            btnHint.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    hintCount = game.hintClick();
+                    switch(hintCount){
+                        case 1:
+                            tvHint.setText(game.showHint());
+                            break;
+                        case 2:
+                            ArrayList<Character> chars = game.DisableLetter();
+                            updateImage();
+                            int c = 0;
+                            int max_count = (26-chars.size())/2;
+                            for (int i = 0; i < buttons.length; i++){
+                                if (!chars.contains(buttons[i].getTag().toString().charAt(0))){
+                                    buttons[i].setEnabled(false);
+                                    buttons[i].setText("");
+                                    c ++;
+                                }
+                                if (c == max_count){
+                                    break;
+                                }
+                            }
+                            break;
+                        case 3:
+                            game.showVowel();
+                            for (int i = 0; i < buttons.length; i++){
+                                Character tag = buttons[i].getTag().toString().charAt(0);
+                                if (tag == 'A' || tag == 'E' || tag == 'I' || tag == 'O' || tag == 'U'){
+                                    buttons[i].setEnabled(false);
+                                    buttons[i].setText("");
+                                }
+                            }
+                            tvAnswer.setText(game.getCurrentWord());
+                            if (game.checkWin()){
+                                Intent i = new Intent(GamePage.this, MainActivity.class);
+                                i.putExtra("gs", true);
+                                startActivity(i);
+                            }
+                            break;
+                    }
+                }
+            });
             for (int row = 0; row < 4; row++) {
                 TableRow currRow = new TableRow(GamePage.this);
                 for (int button = 0; button < 8; button++) {
+                    if (row == 3 && button == 2){
+                        break;
+                    }
                     String letter = Character.toString((char) (button + row * 8 + 65));
                     Button btn = new Button(GamePage.this);
                     btn.setText(letter);
                     btn.setTag(letter);
                     btn.setTextSize(12);
-                    btn.setLayoutParams(new TableRow.LayoutParams(150, 90));
+                    btn.setLayoutParams(new TableRow.LayoutParams(140, 90));
+                    buttons[button + row*8] = btn;
                     currRow.addView(btn);
                     btn.setOnClickListener(this);
                 }
@@ -71,6 +129,20 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
     public void onClick(View v) {
         gameState = game.round(v.getTag().toString().charAt(0));
         tvAnswer.setText(game.getCurrentWord());
+        updateImage();
+
+        if (gameState == 1) {
+            Intent i = new Intent(GamePage.this, MainActivity.class);
+            i.putExtra("gs", true);
+            startActivity(i);
+        } else if (gameState == -1) {
+            Intent i = new Intent(GamePage.this, MainActivity.class);
+            i.putExtra("gs", false);
+            startActivity(i);
+        }
+    }
+
+    public void updateImage(){
         switch (game.getPlayerState()) {
             case 6:
                 ivMan.setImageResource(R.drawable.a);
@@ -93,17 +165,6 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
             case 0:
                 ivMan.setImageResource(R.drawable.g);
                 break;
-        }
-
-
-        if (gameState == 1) {
-            Intent i = new Intent(GamePage.this, MainActivity.class);
-            i.putExtra("gs", true);
-            startActivity(i);
-        } else if (gameState == -1) {
-            Intent i = new Intent(GamePage.this, MainActivity.class);
-            i.putExtra("gs", false);
-            startActivity(i);
         }
     }
 
