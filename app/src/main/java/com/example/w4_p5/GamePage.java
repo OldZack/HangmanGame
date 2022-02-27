@@ -27,6 +27,7 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
     private int hintCount;
     Game game = new Game();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,4 +179,19 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
 //
 //    }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("game",game);
+        outState.putInt("gameState",gameState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            game = savedInstanceState.getParcelable("game");
+            gameState = savedInstanceState.getInt("gameState");
+        }
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 }

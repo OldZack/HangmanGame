@@ -3,7 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+<<<<<<< Updated upstream
         <entry key="..\:/W4_P5/app/src/main/res/layout-land/activity_main.xml" value="0.2" />
+=======
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/HangmanGame/app/src/main/res/layout-land/activity_main.xml" value="0.3099647266313933" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/HangmanGame/app/src/main/res/layout/activity_main.xml" value="0.358695652173913" />
+        <entry key="..\:/W4_P5/app/src/main/res/layout-land/activity_main.xml" value="0.268" />
+>>>>>>> Stashed changes
         <entry key="..\:/W4_P5/app/src/main/res/layout/activity_main.xml" value="0.2296195652173913" />
         <entry key="..\:/W4_P5/app/src/main/res/layout/start_page.xml" value="0.15579710144927536" />
       </map>
