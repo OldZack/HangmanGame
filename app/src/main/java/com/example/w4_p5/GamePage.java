@@ -3,6 +3,7 @@ package com.example.w4_p5;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -62,7 +63,7 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
                     btn.setText(letter);
                     btn.setTag(letter);
                     btn.setTextSize(10);
-                    btn.setLayoutParams(new TableRow.LayoutParams(180, 95));
+                    btn.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL));
                     buttons[button + row*6] = btn;
                     currRow.addView(btn);
                     btn.setOnClickListener(this);
@@ -135,7 +136,7 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
                     btn.setText(letter);
                     btn.setTag(letter);
                     btn.setTextSize(12);
-                    btn.setLayoutParams(new TableRow.LayoutParams(140, 90));
+                    btn.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL));
                     buttons[button + row*8] = btn;
                     currRow.addView(btn);
                     btn.setOnClickListener(this);
