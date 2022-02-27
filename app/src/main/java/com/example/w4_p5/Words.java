@@ -21,7 +21,7 @@ public class Words implements Parcelable {
         words.put("TIGER","ANIMAL");
         words.put("FOX","ANIMAL");
         words.put("GRAPE","FOOD");
-        keys = new String[]{"APPLE","BANANA","CAT","DOG","ELEPHANT","FOX","GRAPE"};
+        keys = new String[]{"APPLE","BANANA","CAT","DOG","TIGER","FOX","GRAPE"};
     }
 
     public Map<String, String> getWords() {
