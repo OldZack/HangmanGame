@@ -30,6 +30,7 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
     private int hintCount;
     private boolean[] isButtonOn;
     private boolean isHintOn;
+    private boolean isHintDisabled;
     Game game = new Game();
 
 
@@ -81,12 +82,13 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
                         case -1:
                             btnHint.setText("No Hints Available");
                             btnHint.setTextSize(10);
+                            isHintDisabled = true;
                             break;
-                        case 0:
+                        case 1:
                             tvHint.setText(game.showHint());
                             isHintOn = true;
                             break;
-                        case 1:
+                        case 2:
                             ArrayList<Character> chars = game.DisableLetter();
                             updateImage();
                             int c = 0;
@@ -102,7 +104,7 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
                                 }
                             }
                             break;
-                        case 2:
+                        case 3:
                             game.showVowel();
                             updateImage();
                             for (int i = 0; i < buttons.length; i++){
@@ -185,16 +187,6 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-
-//    protected void onSaveInstanceState(@NonNull Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        // Bundle is a key value pair
-//        outState.putString("total", tvAnswer.getText().toString());
-//        outState.putString("Opt1", edtOpt1.getText().toString());
-//        outState.putString("Opt2", edtOpt2.getText().toString());
-//
-//    }
-
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -202,24 +194,26 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
         outState.putInt("gameState",gameState);
         outState.putBooleanArray("isButtonOn", isButtonOn);
         outState.putBoolean("isHintOn", isHintOn);
+        outState.putBoolean("isHintDisabled", isHintDisabled);
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
             game = savedInstanceState.getParcelable("game");
             gameState = savedInstanceState.getInt("gameState");
             isButtonOn = savedInstanceState.getBooleanArray("isButtonOn");
             isHintOn = savedInstanceState.getBoolean("isHintOn");
+            isHintDisabled = savedInstanceState.getBoolean("isHintDisabled");
         }
-        super.onRestoreInstanceState(savedInstanceState);
         tvAnswer.setText(game.getCurrentWord());
         int orientation = this.getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (isHintOn){
                 tvHint.setText(game.showHint());
             }
-            if (game.hintClick() == -1){
+            if (isHintDisabled){
                 btnHint.setText("No Hints Available");
                 btnHint.setTextSize(10);
             }

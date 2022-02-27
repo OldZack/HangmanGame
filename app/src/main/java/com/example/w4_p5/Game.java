@@ -57,19 +57,20 @@ public class Game implements Parcelable {
 
     // click hint
     public int hintClick () {
-        if (player.getTurnRemain() <= 1 || player.getCount() == 2){
+        if (player.getTurnRemain() <= 1 || player.getCount() == 3){
             return -1;
         }
+        player.setCount(player.getCount()+1);
         return player.getCount();
     }
     // Click hint for the first time, and return the label of the word
     public String showHint () {
-        player.setCount(player.getCount()+1);
+        //player.setCount(1);
         return words.getHint(answer);
     }
     // click hint for the second time
     public ArrayList<Character> DisableLetter() {
-        player.setCount(player.getCount()+1);
+        //player.setCount(2);
         player.setTurnRemain(player.getTurnRemain()-1);
         ArrayList<Character> chars = new ArrayList<Character>();
         String givenAnswer = currentWord.replace(" ", "");
@@ -83,7 +84,7 @@ public class Game implements Parcelable {
 
     // click hint for the third times, return all the vowels.
     public void showVowel() {
-        player.setCount(player.getCount()+1);
+        //player.setCount(3);
         player.setTurnRemain(player.getTurnRemain()-1);
         for (int i = 0;i<answer.length();i++) {
             if (answer.charAt(i) == 'A' || answer.charAt(i) == 'E' || answer.charAt(i) == 'I' || answer.charAt(i) == 'O' || answer.charAt(i) == 'U') {
