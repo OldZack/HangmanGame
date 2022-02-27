@@ -15,16 +15,21 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GamePage extends AppCompatActivity implements View.OnClickListener{
 
     private TableLayout tlLetters;
     private TextView tvAnswer;
+    private TextView tvHint;
     private ImageView ivMan;
     Button[] buttons;
+    private Button btnHint;
 
     private int gameState;
     private int hintCount;
+    private boolean[] isButtonOn;
+    private boolean isHintOn;
     Game game = new Game();
 
 
@@ -35,9 +40,13 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
 
         tvAnswer = (TextView) findViewById(R.id.tvAnswer);
         tvAnswer.setText(game.getCurrentWord());
+        tvHint = (TextView) findViewById(R.id.tvHint);
         ivMan = (ImageView) findViewById(R.id.ivMan);
         tlLetters = (TableLayout) findViewById(R.id.tlLetter);
         buttons = new Button[26];
+
+        isButtonOn = new boolean[26];
+        Arrays.fill(isButtonOn, true);
 
         int orientation = this.getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -51,6 +60,7 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
                     Button btn = new Button(GamePage.this);
                     btn.setText(letter);
                     btn.setTag(letter);
+                    btn.setTextSize(10);
                     btn.setLayoutParams(new TableRow.LayoutParams(180, 95));
                     buttons[button + row*6] = btn;
                     currRow.addView(btn);
@@ -61,17 +71,22 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
             TableRow currRow = new TableRow(GamePage.this);
         }
         else{
-            Button btnHint = (Button) findViewById(R.id.btnHint);
-            TextView tvHint = (TextView) findViewById(R.id.tvHint);
+            btnHint = (Button) findViewById(R.id.btnHint);
+            tvHint = (TextView) findViewById(R.id.tvHint);
             btnHint.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     hintCount = game.hintClick();
                     switch(hintCount){
-                        case 1:
-                            tvHint.setText(game.showHint());
+                        case -1:
+                            btnHint.setText("No Hints Available");
+                            btnHint.setTextSize(10);
                             break;
-                        case 2:
+                        case 0:
+                            tvHint.setText(game.showHint());
+                            isHintOn = true;
+                            break;
+                        case 1:
                             ArrayList<Character> chars = game.DisableLetter();
                             updateImage();
                             int c = 0;
@@ -79,7 +94,7 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
                             for (int i = 0; i < buttons.length; i++){
                                 if (!chars.contains(buttons[i].getTag().toString().charAt(0))){
                                     buttons[i].setEnabled(false);
-                                    buttons[i].setText("");
+                                    isButtonOn[i] = false;
                                     c ++;
                                 }
                                 if (c == max_count){
@@ -87,13 +102,14 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
                                 }
                             }
                             break;
-                        case 3:
+                        case 2:
                             game.showVowel();
+                            updateImage();
                             for (int i = 0; i < buttons.length; i++){
                                 Character tag = buttons[i].getTag().toString().charAt(0);
                                 if (tag == 'A' || tag == 'E' || tag == 'I' || tag == 'O' || tag == 'U'){
                                     buttons[i].setEnabled(false);
-                                    buttons[i].setText("");
+                                    isButtonOn[i] = false;
                                 }
                             }
                             tvAnswer.setText(game.getCurrentWord());
@@ -184,6 +200,8 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
         super.onSaveInstanceState(outState);
         outState.putParcelable("game",game);
         outState.putInt("gameState",gameState);
+        outState.putBooleanArray("isButtonOn", isButtonOn);
+        outState.putBoolean("isHintOn", isHintOn);
     }
 
     @Override
@@ -191,7 +209,26 @@ public class GamePage extends AppCompatActivity implements View.OnClickListener{
         if (savedInstanceState != null) {
             game = savedInstanceState.getParcelable("game");
             gameState = savedInstanceState.getInt("gameState");
+            isButtonOn = savedInstanceState.getBooleanArray("isButtonOn");
+            isHintOn = savedInstanceState.getBoolean("isHintOn");
         }
         super.onRestoreInstanceState(savedInstanceState);
+        tvAnswer.setText(game.getCurrentWord());
+        int orientation = this.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (isHintOn){
+                tvHint.setText(game.showHint());
+            }
+            if (game.hintClick() == -1){
+                btnHint.setText("No Hints Available");
+                btnHint.setTextSize(10);
+            }
+        }
+        for (int i = 0; i < buttons.length; i++){
+            if (isButtonOn[i] == false){
+                buttons[i].setEnabled(false);
+            }
+        }
+        updateImage();
     }
 }
